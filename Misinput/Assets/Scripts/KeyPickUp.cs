@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class KeyPickup : MonoBehaviour
 {
-    public string keyToUnlock; // "W", "A", "S", "D", "Space"
+    public string keyToUnlock; // "W", "A", "S", "D", "Space", "Mouse"
 
     private void OnTriggerEnter(Collider other)
     {

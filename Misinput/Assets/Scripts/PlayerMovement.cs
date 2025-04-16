@@ -5,6 +5,9 @@ using TMPro;
 
 public class PlayerMovementTutorial : MonoBehaviour
 {
+    [Header("Camera")]
+    public PlayerCam playerCam;
+
     [Header("Movement")]
     public float moveSpeed;
 
@@ -155,11 +158,15 @@ public class PlayerMovementTutorial : MonoBehaviour
             case "Space":
                 canJump = true;
                 break;
+            case "Mouse":
+                if (playerCam != null)
+                    playerCam.SetMouseLookState(true);
+                break;
             default:
                 Debug.LogWarning("Unknown ability key: " + key);
                 break;
         }
-
         Debug.Log("Unlocked: " + key);
     }
+
 }
