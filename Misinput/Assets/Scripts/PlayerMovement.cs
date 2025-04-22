@@ -31,6 +31,11 @@ public class PlayerMovementTutorial : MonoBehaviour
     public KeyCode sprintKey = KeyCode.LeftShift;
     public KeyCode crouchKey = KeyCode.LeftControl;
 
+    [Header("Step Climb")]
+    public float stepHeight = 0.3f;
+    public float stepCheckDistance = 0.4f;
+    public LayerMask stepLayerMask;
+
     [Header("Ground Check")]
     public float playerHeight;
     public LayerMask whatIsGround;
@@ -124,7 +129,36 @@ public class PlayerMovementTutorial : MonoBehaviour
     private void FixedUpdate()
     {
         MovePlayer();
+        StepClimb();
+
     }
+
+    private void StepClimb()
+    {
+        Vector3 origin = transform.position;
+        Vector3[] directions = new Vector3[]
+        {
+        orientation.forward,
+        Quaternion.AngleAxis(45f, Vector3.up) * orientation.forward,
+        Quaternion.AngleAxis(-45f, Vector3.up) * orientation.forward
+        };
+
+        foreach (Vector3 dir in directions)
+        {
+            // Lower ray (foot level)
+            bool lowerRayHit = Physics.Raycast(origin + Vector3.up * 0.1f, dir, out RaycastHit lowerHit, stepCheckDistance, stepLayerMask);
+
+            // Upper ray (head level)
+            bool upperRayHit = Physics.Raycast(origin + Vector3.up * stepHeight, dir, out RaycastHit upperHit, stepCheckDistance, stepLayerMask);
+
+            if (lowerRayHit && !upperRayHit)
+            {
+                rb.position += new Vector3(0f, stepHeight, 0f);
+                break; // Only step once per frame
+            }
+        }
+    }
+
 
     private void MyInput()
     {
